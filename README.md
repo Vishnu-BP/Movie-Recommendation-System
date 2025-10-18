@@ -1,19 +1,6 @@
 <div align="center">
-    <h1>🎬 Dynamic, Grounded Movie Recommendation Engine</h1>
-    <p>Personalized film suggestions powered by Google's Gemini Model with Google Search Grounding (RAG).</p>
-    
-    <p>
-        <img src="https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python" alt="Python 3.10+">
-        <img src="https://img.shields.io/badge/FastAPI-0.119.0-009688?style=for-the-badge&logo=fastapi" alt="FastAPI">
-        <img src="https://img-shields.io/badge/Gemini_API-Flash-1A73E8?style=for-the-badge&logo=google" alt="Gemini API">
-        <img src="https://img.shields.io/badge/Firebase-Auth-FFCA28?style=for-the-badge&logo=firebase" alt="Firebase Auth">
-        <img src="https://img.shields.io/badge/Tailwind_CSS-3.x-06B6D4?style=for-the-badge&logo=tailwindcss" alt="Tailwind CSS">
-    </p>
-
-    <p>
-        <a href="./frontend/images/Home.png" target="_blank">View Live Home Page Preview</a> | 
-        <a href="./frontend/images/Result sheet.png" target="_blank">View Live Results Page Preview</a>
-    </p>
+    <h1>🎬 Movie Recomendation Engine - Gemini API and RAG</h1>
+    <p>Personalized film suggestions powered by Google's Gemini Model with Google Search Grounding (RAG).
 </div>
 
 ---
@@ -59,27 +46,21 @@ The model uses the retrieved, up-to-date external data to formulate exactly thre
 
 ---
 
-## 🖼️ 4. Interface Preview
+## 📸 Project Preview
 
-### A. Home Page (Criteria Input)
+<table align="center">
+  <tr>
+    <td align="center"><b>🏠 Home Page</b></td>
+    <td align="center"><b>📝 Result Page</b></td>
+  </tr>
+  <tr>
+    <td><a href="./frontend/images/Home.png"><img src="./frontend/images/Home.png" width="250" alt="Home Page"></a></td>
+    <td><a href="./frontend/images/Result sheet.png"><img src="./frontend/images/Result sheet.png" width="250" alt="Result Page"></a></td>
+    
+  </tr>
+</table>
 
-<div align="center">
-    <a href="./frontend/images/Home.png" target="_blank">
-        <img src="" alt="Home Page: Movie Criteria Form" style="max-width: 600px; border: 1px solid #30363d; border-radius: 8px;">
-    </a>
-    <p>The form captures user preferences for Genre, Mood, and Era, initiating the Dynamic RAG search.</p>
-</div>
 
-### B. Results Page (Grounded Output)
-
-<div align="center">
-    <a href="./frontend/images/Result sheet.png" target="_blank">
-        <img src="" alt="Results Page: Recommendations with Justifications" style="max-width: 600px; border: 1px solid #30363d; border-radius: 8px;">
-    </a>
-    <p>Displays the 3 top recommendations, complete with factual ratings and justifications based on retrieved data.</p>
-</div>
-
----
 
 ## ⚙️ 5. Local Setup and Installation
 
