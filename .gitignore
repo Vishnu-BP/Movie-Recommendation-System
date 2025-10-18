@@ -1,0 +1,58 @@
+# -------------------------------------------------------------------
+# Environment / OS specific files
+# -------------------------------------------------------------------
+.DS_Store
+.env
+.flaskenv
+.vscode/
+
+# -------------------------------------------------------------------
+# Python / FastAPI / Virtual Environments
+# -------------------------------------------------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+env/
+.venv/
+/htmlcov/
+.pytest_cache/
+.tox/
+dist/
+build/
+*.egg-info/
+
+# -------------------------------------------------------------------
+# Build Artifacts / Dependencies (Node/npm, if used for modern JS build)
+# -------------------------------------------------------------------
+# Although this is vanilla JS, including for completeness if a build step is added
+node_modules/
+/npm-debug.log*
+/yarn-error.log
+
+# -------------------------------------------------------------------
+# Secret Keys and Configuration Files (CRITICAL for security)
+# -------------------------------------------------------------------
+# The Firebase Admin SDK key and the Gemini API key MUST be secured.
+# The actual Firebase config for the *frontend* is often safe, but keeping
+# sensitive backend files out is crucial.
+#
+# NOTE: The 'GEMINI_API_KEY' should be loaded via an environment variable
+# or an .env file on your backend.
+config.ini
+secrets.json
+*.key
+*.pem
+*.p12
+
+# Common names for local environment variable files
+.env
+.env.local
+.env.development.local
+.env.production.local
+
+# Firebase specific generated files (if you use the CLI in the root)
+firebase-debug.log
+.firebase/
+.firebaserc # Unless you explicitly want to share project aliases

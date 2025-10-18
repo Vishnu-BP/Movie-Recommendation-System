@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Movie Recommender</title>
+    
+    <link rel="shortcut icon" 
+          href="https://res.cloudinary.com/dt6y4dsml/image/upload/w_32,h_32,c_scale/v1760781831/Gemini_Generated_Image_px1y6zpx1y6zpx1y_zftbov.ico" 
+          type="image/x-icon">
+          
+    <link rel="icon" type="image/png" sizes="32x32" 
+          href="https://res.cloudinary.com/dt6y4dsml/image/upload/w_32,h_32,c_scale/v1760781831/Gemini_Generated_Image_px1y6zpx1y6zpx1y_zftbov.png">
+
+    <link rel="apple-touch-icon" sizes="180x180" 
+          href="https://res.cloudinary.com/dt6y4dsml/image/upload/w_180,h_180,c_scale/v1760781831/Gemini_Generated_Image_px1y6zpx1y6zpx1y_zftbov.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0d1117; color: #c9d1d9; }
+        .card { background-color: #161b22; border: 1px solid #30363d; border-radius: 12px; }
+        .btn-primary { 
+            background-color: #238636; 
+            color: white; 
+            transition: background-color 0.2s, transform 0.1s; 
+        }
+        .btn-primary:hover { 
+            background-color: #2ea043;
+            transform: translateY(-1px);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        .input-field { background-color: #0d1117; border: 1px solid #30363d; color: #c9d1d9; }
+        .spinner { 
+            border-top-color: #238636; 
+            border-left-color: transparent;
+            border-bottom-color: transparent;
+            border-right-color: transparent;
+        }
+        .source-link { color: #58a6ff; }
+        .focus\:ring-blue-500:focus { border-color: #58a6ff; }
+    </style>
+</head>
+<body>
+    <nav class="sticky top-0 w-full bg-[#161b22] border-b border-[#30363d] z-40 p-3 flex items-center justify-between shadow-lg">
+        <div class="text-xl font-bold text-white tracking-wider">
+            Vishnu BP <span class="text-sm font-normal text-gray-500 ml-2 hidden sm:inline">| ML Engineer</span>
+        </div>
+        <div class="flex space-x-4">
+            <a href="https://www.linkedin.com/in/vishnu-bp/" target="_blank" class="text-gray-400 hover:text-[#58a6ff] transition-colors" title="LinkedIn Profile">
+                <svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.535-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.784 7 2.476v6.759z"/></svg>
+            </a>
+            
+            <a href="https://github.com/Vishnu-BP" target="_blank" class="text-gray-400 hover:text-[#58a6ff] transition-colors" title="GitHub Repository">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.082-.742.083-.728.083-.728 1.205.084 1.839 1.237 1.839 1.237 1.07 1.835 2.805 1.305 3.49.998.108-.77.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.046.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.923.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.8.576c4.768-1.589 8.2-6.087 8.2-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            </a>
+
+            <a href="mailto:vishnubp71@gmail.com" class="text-gray-400 hover:text-[#58a6ff] transition-colors" title="Send Email">
+                <svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path d="M22 6c0-1.103-.897-2-2-2h-16c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2v-12zm-2 0l-8 5.667-8-5.667h16zm0 12h-16v-10.455l8 5.667 8-5.667v10.455z"/></svg>
+            </a>
+            
+            <a href="https://drive.google.com/file/d/1F3JxLp2JbNDviBGWe_3kEo8IDE2WCKHN/view?usp=drive_link" target="_blank" class="text-gray-400 hover:text-[#58a6ff] transition-colors" title="Download Resume">
+                <svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path d="M14 2h-10c-1.103 0-2 .897-2 2v16c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2v-10l-6-6zm4 10h-3v3h-2v-3h-3l4-4 4 4zm-14 8v-16h8l6 6v10h-14z"/></svg>
+            </a>
+        </div>
+    </nav>
+
+    <div id="app" class="min-h-screen p-4 flex justify-center items-start">
+        <div class="w-full max-w-2xl mt-8">
+            <header class="text-center mb-10">
+                <h1 class="text-4xl font-bold text-white mb-2">🎬 Movie RAG Engine</h1>
+                <p class="text-gray-400">Personalized recommendations powered by Gemini and Google Search Grounding.</p>
+                <div id="user-info" class="mt-4 text-sm text-gray-500"></div>
+            </header>
+
+            <div id="status-message" class="hidden text-center p-3 card mb-6"></div>
+            <div id="loading-overlay" class="hidden fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
+                <div class="flex flex-col items-center">
+                    <div class="spinner border-4 border-solid h-12 w-12 rounded-full animate-spin"></div>
+                    <p class="mt-4 text-white">Retrieving and Generating Recommendations...</p>
+                </div>
+            </div>
+
+            <div id="auth-view" class="card p-6 shadow-xl">
+                <h2 class="text-2xl font-semibold mb-6 text-white text-center">Welcome!</h2>
+                <div class="space-y-4">
+                    <p class="text-sm text-gray-400 text-center">
+                        This system uses Firebase for user session management (optional for core function). Click 'Continue' to start the app.
+                    </p>
+                    <button id="auth-button" class="btn-primary w-full py-2 rounded-lg font-semibold text-lg hover:ring-2 hover:ring-green-400">
+                        Continue to Recommendation App
+                    </button>
+                    <p class="text-xs text-gray-500 text-center mt-3">
+                        Authentication is attempted via Firebase (anonymously/custom token) if configured by the host.
+                    </p>
+                </div>
+            </div>
+
+            <div id="main-app-view" class="card p-6 shadow-xl hidden">
+                <h2 class="text-2xl font-semibold mb-6 text-white">Your Movie Criteria</h2>
+                <form id="recommendation-form" class="space-y-4">
+                    <div>
+                        <label for="genre" class="block text-sm font-medium mb-1">Preferred Genre</label>
+                        <select id="genre" class="input-field w-full p-2 rounded-md focus:ring-2 focus:ring-blue-500" required>
+                            <option value="">Select a Genre</option>
+                            <option value="Action/Adventure">Action / Adventure</option>
+                            <option value="Sci-Fi/Fantasy">Sci-Fi / Fantasy</option>
+                            <option value="Thriller/Mystery">Thriller / Mystery</option>
+                            <option value="Drama/Historical">Drama / Historical</option>
+                            <option value="Comedy/Romance">Comedy / Romance</option>
+                            <option value="Horror">Horror</option>
+                            <option value="Documentary">Documentary</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="mood" class="block text-sm font-medium mb-1">Current Mood / Vibe</label>
+                        <select id="mood" class="input-field w-full p-2 rounded-md focus:ring-2 focus:ring-blue-500" required>
+                            <option value="">Describe your mood</option>
+                            <option value="Intense and thought-provoking">Intense and thought-provoking</option>
+                            <option value="Lighthearted and fun">Lighthearted and fun</option>
+                            <option value="Nostalgic and classic">Nostalgic and classic</option>
+                            <option value="Something scary and suspenseful">Something scary and suspenseful</option>
+                            <option value="Emotional and moving">Emotional and moving</option>
+                            <option value="Uplifting and inspirational">Uplifting and inspirational</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="era" class="block text-sm font-medium mb-1">Time Period / Era</label>
+                        <select id="era" class="input-field w-full p-2 rounded-md focus:ring-2 focus:ring-blue-500" required>
+                            <option value="">Select a Movie Era</option>
+                            <option value="Contemporary (2020s onwards)">Contemporary (2020s onwards)</option>
+                            <option value="Modern Classic (2000s - 2019)">Modern Classic (2000s - 2019)</option>
+                            <option value="90s & 80s Films">90s & 80s Films</option>
+                            <option value="Old School Classic (pre-1980)">Old School Classic (pre-1980)</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="keyword" class="block text-sm font-medium mb-1">Specific Actor/Director/Plot keyword (Optional)</label>
+                        <input type="text" id="keyword" placeholder="e.g., Leonardo DiCaprio, Sci-Fi, directed by Nolan" class="input-field w-full p-2 rounded-md focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <button type="submit" class="btn-primary w-full py-2 rounded-lg font-semibold text-lg">
+                        Get Recommendations
+                    </button>
+                </form>
+            </div>
+
+            <div id="results-view" class="mt-8 hidden">
+                <h2 class="text-2xl font-semibold mb-4 text-white">Your Suggestions (RAG Output)</h2>
+                <div id="recommendations-list" class="space-y-6">
+                    </div>
+                <button id="new-search-button" class="btn-primary mt-6 w-full py-2 rounded-lg font-semibold text-lg">
+                    Start New Search
+                </button>
+            </div>
+            
+            <div id="custom-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 p-4">
+                <div class="card p-6 w-full max-w-sm">
+                    <h3 id="modal-title" class="text-xl font-bold mb-3 text-red-400">Error</h3>
+                    <p id="modal-body" class="text-gray-300 mb-4"></p>
+                    <button onclick="document.getElementById('custom-modal').classList.add('hidden')" class="btn-primary w-full py-2 rounded-lg">
+                        Close
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- GLOBAL VARIABLES ---
+        // NOTE: The API_ENDPOINT is now set to a local proxy, which is the correct and secure architectural pattern.
+        const API_ENDPOINT = '/api/recommend'; 
+
+        // These variables are assumed to be injected by the hosting environment (e.g., Render/Canvas)
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        
+        let app, db, auth;
+        let userId = null;
+
+        // DOM Elements
+        const authView = document.getElementById('auth-view');
+        const mainAppView = document.getElementById('main-app-view');
+        const resultsView = document.getElementById('results-view');
+        const recommendationForm = document.getElementById('recommendation-form');
+        const recommendationsList = document.getElementById('recommendations-list');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const statusMessage = document.getElementById('status-message');
+        const userInfo = document.getElementById('user-info');
+        const authButton = document.getElementById('auth-button');
+
+        // --- MOCK DATA FOR FRONTEND TESTING ---
+        // This is here to show the results screen if a backend isn't available.
+        const MOCK_RECOMMENDATIONS = {
+            recommendations: [
+                {
+                    title: "The Martian",
+                    year: "2015",
+                    rating: "8.0/10",
+                    justification: "A perfect blend of Sci-Fi/Fantasy and Action/Adventure, this film features intense, thought-provoking survival against the backdrop of Mars, matching the criteria for a modern classic."
+                },
+                {
+                    title: "Ex Machina",
+                    year: "2014",
+                    rating: "7.7/10",
+                    justification: "This Thriller/Mystery fits the 'Intense and thought-provoking' mood and 'Modern Classic' era, focusing on complex AI ethics and suspenseful human interaction."
+                },
+                {
+                    title: "Blade Runner 2049",
+                    year: "2017",
+                    rating: "8.0/10",
+                    justification: "An aesthetically stunning Sci-Fi/Fantasy that, despite its length, offers an emotional and moving experience that deeply satisfies the search for modern, high-quality dystopian cinema."
+                },
+            ],
+            groundingMetadata: {
+                groundingAttributions: [
+                    { web: { uri: "https://www.imdb.com/title/tt3659414/", title: "The Martian (2015) - IMDb" } },
+                    { web: { uri: "https://en.wikipedia.org/wiki/Ex_Machina_(film)", title: "Ex Machina - Wikipedia" } },
+                    { web: { uri: "https://www.rogerebert.com/reviews/blade-runner-2049-2017", title: "Blade Runner 2049 Movie Review (2017) | Roger Ebert" } },
+                ]
+            }
+        };
+
+
+        // --- UTILITY FUNCTIONS ---
+
+        function showModal(title, message, isError = true) {
+            const modal = document.getElementById('custom-modal');
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-body').textContent = message;
+            document.getElementById('modal-title').className = isError ? 'text-xl font-bold mb-3 text-red-400' : 'text-xl font-bold mb-3 text-green-400';
+            modal.classList.remove('hidden');
+        }
+
+        function showLoading(show) {
+            loadingOverlay.classList.toggle('hidden', !show);
+        }
+
+        function showStatus(message, isError = false) {
+            statusMessage.textContent = message;
+            statusMessage.className = `p-3 card mb-6 ${isError ? 'bg-red-900/50 text-red-300' : 'bg-green-900/50 text-green-300'}`;
+            statusMessage.classList.remove('hidden');
+            setTimeout(() => statusMessage.classList.add('hidden'), 5000);
+        }
+        
+        // --- FIREBASE AND AUTHENTICATION ---
+
+        async function initializeFirebase() {
+            // Check for mock state if config is missing
+            if (!firebaseConfig) {
+                 showStatus("Firebase config missing. Running in UN-AUTHENTICATED mock mode.", true);
+                 userId = 'mock-user-12345';
+                 userInfo.innerHTML = `User ID: <span class="font-mono text-xs text-yellow-500">${userId}</span> (Mocked)`;
+                 authView.classList.add('hidden');
+                 mainAppView.classList.remove('hidden');
+                 authButton.disabled = false;
+                 return;
+            }
+            
+            // Disable button to prevent multiple clicks during initialization
+            authButton.disabled = true;
+
+            try {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                // setLogLevel('Debug'); // Disable for production
+
+                // Sign in using custom token or anonymously
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        userInfo.innerHTML = `User ID: <span class="font-mono text-xs text-green-500">${userId}</span> (Authenticated)`;
+                        authView.classList.add('hidden');
+                        mainAppView.classList.remove('hidden');
+                    } else {
+                        userId = null;
+                        userInfo.textContent = 'Not authenticated.';
+                        authView.classList.remove('hidden');
+                        mainAppView.classList.add('hidden');
+                    }
+                    authButton.disabled = false;
+                });
+
+            } catch (error) {
+                console.error("Firebase Initialization/Auth Error:", error);
+                showModal("Initialization Failed", "Could not connect to Firebase. Check console for details.", true);
+                authButton.disabled = false;
+            }
+        }
+
+        // --- BACKEND API CALL (Now uses a secure proxy endpoint) ---
+
+        // Simple fetch with no retry for brevity in this final output, 
+        // as the complex logic for retries is not the core change.
+        async function getRecommendations(e) {
+            e.preventDefault();
+            
+            if (!userId) {
+                showModal("Authentication Required", "Please click the 'Continue' button first.", true);
+                return;
+            }
+
+            const genre = document.getElementById('genre').value;
+            const mood = document.getElementById('mood').value;
+            const era = document.getElementById('era').value;
+            const keyword = document.getElementById('keyword').value;
+            
+            showLoading(true);
+            recommendationsList.innerHTML = '';
+            resultsView.classList.add('hidden');
+            mainAppView.classList.add('hidden');
+
+            // Payload for the FastAPI backend proxy
+            const payload = {
+                genre: genre,
+                mood: mood,
+                era: era,
+                keyword: keyword
+            };
+
+            try {
+                // *** This fetch is to your secure backend proxy (e.g., FastAPI) ***
+                // *** The backend securely calls the Gemini API with the RAG tool. ***
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    // Fallback to mock data if the API proxy is unreachable or throws a non-recoverable error
+                    if (response.status === 404 || response.status === 500) {
+                         console.warn("Backend API proxy failed. Displaying mock data.");
+                         showStatus("Backend API failed! Displaying mock recommendations for demonstration.", true);
+                         renderRecommendations(MOCK_RECOMMENDATIONS.recommendations, MOCK_RECOMMENDATIONS.groundingMetadata.groundingAttributions.map(a => a.web));
+                         return;
+                    }
+                    throw new Error(`HTTP Error: ${response.status} - ${await response.text()}`);
+                }
+
+                const result = await response.json();
+                
+                if (!result || !result.recommendations || !Array.isArray(result.recommendations)) {
+                    throw new Error("Backend returned empty or malformed recommendations array.");
+                }
+
+                const sources = (result.groundingMetadata?.groundingAttributions || [])
+                    .map(attribution => ({
+                        uri: attribution.web?.uri,
+                        title: attribution.web?.title,
+                    }))
+                    .filter(source => source.uri && source.title);
+
+                renderRecommendations(result.recommendations, sources);
+                
+            } catch (error) {
+                console.error("API or Parsing Error:", error);
+                showModal("Recommendation Failed", `There was an error generating suggestions. Please check your backend service. Details: ${error.message}`, true);
+                mainAppView.classList.remove('hidden'); 
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // --- RENDERING ---
+
+        function renderRecommendations(recommendations, sources) {
+            recommendationsList.innerHTML = '';
+
+            recommendations.forEach((movie, index) => {
+                const isTopPick = index === 0;
+                const itemHtml = `
+                    <div class="card p-5 border-l-4 ${isTopPick ? 'border-yellow-500' : 'border-blue-500'}">
+                        <h3 class="text-xl font-bold text-white mb-1">${index + 1}. ${movie.title} (${movie.year}) ${isTopPick ? '<span class="text-xs bg-yellow-500 text-black font-extrabold px-2 py-0.5 rounded-full ml-2">TOP PICK</span>' : ''}</h3>
+                        <p class="text-sm font-semibold text-gray-400 mb-3">IMDb Rating: ${movie.rating}</p>
+                        <p class="text-gray-300">
+                            <span class="font-medium text-blue-300">Why it matches:</span> ${movie.justification}
+                        </p>
+                    </div>
+                `;
+                recommendationsList.innerHTML += itemHtml;
+            });
+
+            // Add Grounding Sources Section
+            if (sources.length > 0) {
+                let sourceHtml = '<div class="mt-4 p-4 card">';
+                sourceHtml += '<p class="text-sm font-semibold mb-2 text-gray-400">Grounding Sources (Web Data used for RAG):</p>';
+                sourceHtml += '<ul class="list-disc list-inside space-y-1 text-sm text-gray-500">';
+                
+                // Deduplicate sources and limit to 5
+                const uniqueSources = Array.from(new Set(sources.map(s => s.uri)))
+                    .map(uri => sources.find(s => s.uri === uri))
+                    .slice(0, 5);
+
+                uniqueSources.forEach(source => {
+                    sourceHtml += `<li><a href="${source.uri}" target="_blank" class="source-link hover:underline" title="${source.title || source.uri}">${source.title || 'Source Link'}</a></li>`;
+                });
+                sourceHtml += '</ul></div>';
+                recommendationsList.innerHTML += sourceHtml;
+            } else {
+                recommendationsList.innerHTML += '<div class="mt-4 p-4 card text-sm text-gray-500">Note: Grounding data was used, but specific external citations were not available for display.</div>';
+            }
+
+            resultsView.classList.remove('hidden');
+        }
+
+        // --- EVENT LISTENERS AND INITIALIZATION ---
+
+        recommendationForm.addEventListener('submit', getRecommendations);
+
+        document.getElementById('new-search-button').addEventListener('click', () => {
+            resultsView.classList.add('hidden');
+            mainAppView.classList.remove('hidden');
+            recommendationsList.innerHTML = '';
+        });
+        
+        authButton.addEventListener('click', initializeFirebase);
+        
+        // Auto-attempt initialization on load
+        if (firebaseConfig || typeof __firebase_config === 'undefined') {
+            // This covers both: 1) config is present, or 2) config is missing (so we run the mock mode)
+            authButton.textContent = "Initializing...";
+            authButton.disabled = true;
+            initializeFirebase();
+        } else {
+            // Fallback for extremely strict environments
+            authButton.textContent = "Start App (Manual Auth)";
+            authButton.disabled = false;
+        }
+
+    </script>
+</body>
+</html>
